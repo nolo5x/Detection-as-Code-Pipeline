@@ -1,0 +1,22 @@
+title: Broken PowerShell Detection
+id: 12345678-1234-1234-1234-123456789abc
+status: experimental
+description: Intentionally invalid Sigma rule used to demonstrate CI validation failure.
+author: Adarsha Acharya
+date: 2026-10-01
+
+logsource:
+  product: windows
+  category: ps_script
+
+detection:
+  selection:
+    ScriptBlockText|contains:
+      - "Invoke-Expression"
+
+  condition: selection
+
+falsepositives:
+  - Testing only
+
+level: medium

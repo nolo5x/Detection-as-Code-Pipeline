@@ -14,7 +14,7 @@ detection:
     ScriptBlockText|contains:
       - "Invoke-Expression"
 
-  condition: selection_that_does_not_exist
+  condition: selection
 
 falsepositives:
   - Testing only

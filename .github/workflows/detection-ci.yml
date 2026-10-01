@@ -1,0 +1,42 @@
+name: Detection as Code CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  validate-detections:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Sigma CLI
+        run: |
+          pip install sigma-cli
+          sigma plugin install splunk
+
+      - name: Validate Sigma rules
+        run: |
+          sigma check detections/
+
+      - name: Convert Sigma rules to Splunk
+        run: |
+          mkdir -p splunk/generated
+          sigma convert -t splunk -p splunk_windows \
+            detections/windows/powershell/invoke_webrequest.yml \
+            > splunk/generated/invoke_webrequest.spl
+
+      - name: Display generated SPL
+        run: |
+          cat splunk/generated/invoke_webrequest.spl

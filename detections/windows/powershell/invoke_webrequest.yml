@@ -1,0 +1,32 @@
+title: Suspicious PowerShell Invoke-WebRequest Download
+id: 8c5a2b41-7f43-4e91-9f28-2c9c37a01e11
+status: experimental
+description: Detects PowerShell Invoke-WebRequest commands used with download-related parameters.
+author: Adarsha Acharya
+date: 2026-10-01
+
+logsource:
+  product: windows
+  category: ps_script
+
+detection:
+  selection_command:
+    ScriptBlockText|contains:
+      - 'Invoke-WebRequest'
+
+  selection_parameter:
+    ScriptBlockText|contains:
+      - '-OutFile'
+      - '-Uri'
+
+  condition: selection_command and selection_parameter
+
+falsepositives:
+  - Legitimate administrative PowerShell downloads
+  - Software installation and update scripts
+
+level: medium
+
+tags:
+  - attack.command-and-control
+  - attack.t1105
